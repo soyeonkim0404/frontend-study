@@ -74,44 +74,27 @@ class DatePicker {
     this.prevBtnEl.addEventListener('click', this.moveToPrevMonth.bind(this));
   }
 
-  // 다음달
   moveToNextMonth() {
     this.calendarData.month++;
     if(this.calendarData.month > 11){
       this.calendarData.month = 0;
       this.calendarData.year++;
     }
-    this.updateMonth();
-    this.updateDates();
   }
-  
-  // 이전달
-  moveToPrevMonth() {
-    this.calendarData.month--;
-    if(this.calendarData.month < 0){
-      this.calendarData.month = 11;
-      this.calendarData.year--;
-    }
-    this.updateMonth();
-    this.updateDates();
-  }
+  moveToPrevMonth() {}
 
-  // 캘린더 토글
   toggleCalendar() {
     this.calendarEl.classList.toggle('active');
     this.updateMonth();
     this.updateDates();
   }
 
-  // 월 표시
   updateMonth() {
     this.monthContentEl.textContent = `
     ${this.calendarData.year} 
     ${this.monthData[this.calendarData.month]}
     `;
   }
-  
-  //일 표시
   updateDates() {
     this.calendarDatesEl.innerHTML = '';
     const numberOfDates = new Date(
