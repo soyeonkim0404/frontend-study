@@ -39,8 +39,19 @@ class DatePicker {
 
   constructor() {
     this.initCalendarData();
+    this.initSelectedDate();
     this.assignElement();
+    this.setDateInput();
     this.addEvent();
+  }
+
+  initSelectedDate(){
+    this.selectData = {...this.calendarData};
+  }
+
+  setDateInput(){
+    this.dataInputEl.textContent = this.formateDate(this.selectData.data);
+    this.dataInputEl.dataset.value = this.selectData.data;
   }
 
   initCalendarData() {
@@ -72,6 +83,38 @@ class DatePicker {
     this.dataInputEl.addEventListener('click', this.toggleCalendar.bind(this));
     this.nextBtnEl.addEventListener('click', this.moveToNextMonth.bind(this));
     this.prevBtnEl.addEventListener('click', this.moveToPrevMonth.bind(this));
+    this.calendarDatesEl.addEventListener('click', this.onClickSelectDate.bind(this));
+  }
+
+  //날짜 클릭시 input에 출력
+  onClickSelectDate(event){
+    const eventTarget = event.target;
+    if(eventTarget.dataset.date){
+      this.calendarDatesEl.querySelector('.selected')?.classList.remove('selected');
+      eventTarget.classList.add('selected');
+      this.selectData = {
+        data: new Date(this.calendarData.year, this.calendarData.month, eventTarget.dataset.date),
+        date: eventTarget.dataset.date,
+        month: this.calendarData.month,
+        year: this.calendarData.year,
+      };
+      this.setDateInput();
+      this.calendarEl.classList.remove('active');
+    }
+  }
+
+  // 년/월/일 세팅
+  formateDate(dateData){
+    let date = dateData.getDate();
+    if(date < 10){
+      date = `0${date}`;
+    }
+    let month = dateData.getMonth() + 1;
+    if(month < 10){
+      month = `0${month}`;
+    }
+    let year = dateData.getFullYear();
+    return `${year}/${month}/${date}`
   }
 
   // 다음달
@@ -84,7 +127,7 @@ class DatePicker {
     this.updateMonth();
     this.updateDates();
   }
-  
+
   // 이전달
   moveToPrevMonth() {
     this.calendarData.month--;
@@ -98,6 +141,9 @@ class DatePicker {
 
   // 캘린더 토글
   toggleCalendar() {
+    if(this.calendarEl.classList.contains('active')){
+      this.calendarData = {...this.selectData};
+    }
     this.calendarEl.classList.toggle('active');
     this.updateMonth();
     this.updateDates();
@@ -110,7 +156,7 @@ class DatePicker {
     ${this.monthData[this.calendarData.month]}
     `;
   }
-  
+
   //일 표시
   updateDates() {
     this.calendarDatesEl.innerHTML = '';
@@ -135,7 +181,15 @@ class DatePicker {
     this.colorSaturday();
     this.colorSunday();
     this.markToday();
+    this.markSelectedDate();
   }
+
+  markSelectedDate(){
+    if(this.selectData.year === this.calendarData.year && this.selectData.month === this.calendarData.month){
+      this.calendarDatesEl.querySelector(`[data-date='${this.selectData.date}']`).classList.add('selected');
+    }
+  }
+
   colorSaturday() {
     const saturdayEls = this.calendarDatesEl.querySelectorAll(
       `.date:nth-child(7n+${

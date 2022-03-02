@@ -112,12 +112,12 @@
           background-color: #f3f3f3;
         }
 
-        &.today {
-          background-color: #ca92ff;
-        }
-
         &.selected {
           background-color: #00ca85;
+        }
+
+        &.today {
+          background-color: #ca92ff;
         }
        /* // ! js로 동적으로 구현할 예정
         &:nth-child(7n + 2) {
