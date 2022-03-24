@@ -76,7 +76,7 @@ class DatePicker {
 
   moveToNextMonth() {
     this.calendarData.month++;
-    if(this.calendarData.month > 11){
+    if (this.calendarData.month > 11) {
       this.calendarData.month = 0;
       this.calendarData.year++;
     }
